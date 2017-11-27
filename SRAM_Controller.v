@@ -51,10 +51,6 @@ logic [15:0] SRAM_write_data_buf;
 		
 		Clock_100_locked = 1'b1;
 	end
-
-	// This addresses an ambiguity in the simulation 
-	// which can cause incorrect results
-	assign SRAM_UB_N_O = Clock_50;
 `else
 	// Use PLL for synthesis
 	Clock_100_PLL	Clock_100_PLL_inst (
@@ -63,17 +59,17 @@ logic [15:0] SRAM_write_data_buf;
 		.c0 ( Clock_100 ),
 		.locked ( Clock_100_locked )
 	);
-
-	always_ff @ (negedge Clock_100 or negedge Resetn) begin
-		if (Resetn == 1'b0) begin
-			SRAM_UB_N_O <= 1'b0;
-		end else begin
-			SRAM_UB_N_O <= ~Clock_50;
-		end	
-	end
 `endif
 
 assign SRAM_ready = Resetn && Clock_100_locked;
+
+always_ff @ (negedge Clock_100 or negedge Resetn) begin
+	if (Resetn == 1'b0) begin
+		SRAM_UB_N_O <= 1'b0;
+	end else begin
+		SRAM_UB_N_O <= ~Clock_50;
+	end	
+end
 
 // Buffering the signals before driving the external pins
 always_ff @ (posedge Clock_50 or negedge Resetn) begin

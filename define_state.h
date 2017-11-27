@@ -1,12 +1,11 @@
 `ifndef DEFINE_STATE
 
 // This defines the states
-typedef enum logic [2:0] {
+typedef enum logic [1:0] {
 	S_IDLE,
 	S_ENABLE_UART_RX,
 	S_WAIT_UART_RX,
-    S_MILESTONE_1,
-    S_MILESTONE_2
+	S_M1_TOP_STATE
 } top_state_type;
 
 typedef enum logic [1:0] {
@@ -38,52 +37,6 @@ typedef enum logic [3:0] {
 	S_VS_FETCH_PIXEL_DATA_2,
 	S_VS_FETCH_PIXEL_DATA_3
 } VGA_SRAM_state_type;
-
-typedef enum logic [4:0] {
-    S_idle,
-    S_lead0,
-    S_lead1,
-    S_lead2,
-    S_lead3,
-    S_lead4,
-    S_lead5,
-    S_lead6,
-    S_lead7,
-    S_lead8,
-    S_lead9,
-    S_lead10,
-    S_lead11,
-    S_lead12,
-    S_lead13,
-    S_c0,
-    S_c1,
-    S_c2,
-    S_c3,
-    S_c4,
-    S_c5,
-    S_out0,
-    S_out1,
-    S_out2,
-    S_out3
-} milestone_1_state;
-
-typedef enum logic [3:0] {
-    S_idle2,
-    S_read_in,
-    S_compute_in,
-    S_megastate_1a,
-    S_megastate_1b,
-    S_megastate_1c,
-    S_megastate_1d,
-    S_megastate_2,
-    S_compute_out1,
-    S_compute_out2,
-    S_compute_out3,
-    S_compute_out4,
-    S_write_outa,
-    S_write_outb,
-    S_write_outc
-} milestone_2_state;
 
 `define DEFINE_STATE 1
 `endif

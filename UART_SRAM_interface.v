@@ -79,7 +79,7 @@ always_ff @ (posedge Clock or negedge Resetn) begin
 			S_US_IDLE: begin
 				if (Enable == 1'b1) begin
 					// Start receiving data from UART
-					UART_SRAM_state <= S_US_START_FIRST_BYTE_RECEIVE;
+					UART_SRAM_state <= S_US_START_FIRST_BYTE_RECEIVE;//S_US_STRIP_FILE_HEADER_1;
 					UART_rx_enable <= 1'b1;
 					SRAM_address <= 18'd0;				
 				end
@@ -105,10 +105,10 @@ always_ff @ (posedge Clock or negedge Resetn) begin
 						// Header is stripped out
 						UART_SRAM_state <= S_US_START_FIRST_BYTE_RECEIVE;
 					else 
-						UART_SRAM_state <= S_US_START_FIRST_BYTE_RECEIVE;//<= S_US_STRIP_FILE_HEADER_1;          
+						UART_SRAM_state <= S_US_STRIP_FILE_HEADER_1;          
 				end						
 			end
-			S_US_START_FIRST_BYTE_RECEIVE: begin
+		S_US_START_FIRST_BYTE_RECEIVE: begin
 				if (UART_rx_empty == 1'b0) begin
 					// a byte of data is available
 					UART_rx_unload_data <= 1'b1;

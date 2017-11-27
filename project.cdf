@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP2C35F672) Path("/home/ECE/alchikht/Desktop/project_m2/") File("project.sof") MfrSpec(OpMask(1));
+		Device PartName(EP2C35F672) Path("/home/ECE/alchikht/Desktop/Milestone1/") File("project.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

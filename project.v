@@ -26,9 +26,6 @@ module project (
 		output logic[6:0] SEVEN_SEGMENT_N_O[7:0], // 8 seven segment displays
 		output logic[8:0] LED_GREEN_O,            // 9 green LEDs
 
-		//output logic m1_start,
-		//input logic m1_done,
-
 		/////// VGA interface                     ////////////
 		output logic VGA_CLOCK_O,                 // VGA clock
 		output logic VGA_HSYNC_O,                 // VGA H_SYNC
@@ -57,16 +54,6 @@ logic resetn;
 
 top_state_type top_state;
 
-// For Dual-Port RAMs
-logic [6:0] address_a[2:0];
-logic [6:0] address_b[2:0];
-logic [31:0] write_data_a [2:0];
-logic [31:0] write_data_b [2:0];
-logic write_enable_a [2:0];
-logic write_enable_b [2:0];
-logic [31:0] read_data_a [2:0];
-logic [31:0] read_data_b [2:0];
-
 // For Push button
 logic [3:0] PB_pushed;
 
@@ -75,32 +62,27 @@ logic VGA_enable;
 logic [17:0] VGA_base_address;
 logic [17:0] VGA_SRAM_address;
 
-// For Milestone 1
-logic m1_start, m1_done, M1_SRAM_we_n;
-logic [17:0] M1_SRAM_address;
-logic [15:0] M1_SRAM_write_data, M1_SRAM_read_data;
-logic [7:0] m1_j, m1_row, mR_even, mR_odd, mG_even, mG_odd, mB_even, mB_odd;
-
-// For Milestone 2
-logic start_m2, m2_done, M2_SRAM_we_n;
-logic [17:0] M2_SRAM_address;
-logic [15:0] M2_SRAM_write_data, M2_SRAM_read_data;
-
 // For SRAM
 logic [17:0] SRAM_address;
 logic [15:0] SRAM_write_data;
-logic [7:0] SRAM_write_data_a, SRAM_write_data_b;
 logic SRAM_we_n;
 logic [15:0] SRAM_read_data;
 logic SRAM_ready;
 
 // For UART SRAM interface
-logic UART_rx_enable; 
+logic UART_rx_enable;
 logic UART_rx_initialize;
 logic [17:0] UART_SRAM_address;
 logic [15:0] UART_SRAM_write_data;
 logic UART_SRAM_we_n;
 logic [25:0] UART_timer;
+
+// For M1 SRAM interface
+logic M1_start;
+logic M1_stop;
+logic [17:0] M1_SRAM_address;
+logic [15:0] M1_SRAM_write_data;
+logic M1_SRAM_we_n;
 
 logic [6:0] value_7_segment [7:0];
 
@@ -111,115 +93,6 @@ logic [3:0] Frame_error;
 assign UART_TX_O = 1'b1;
 
 assign resetn = ~SWITCH_I[17] && SRAM_ready;
-
-assign SRAM_write_data_a = SRAM_write_data[15:8];
-assign SRAM_write_data_b = SRAM_write_data[7:0];
-
-// Milestone 2
-Milestone2 M2_unit (
-    .CLOCK(CLOCK_50_I),
-	.start_m2(start_m2),
-	.m2_done(m2_done),
-	.Resetn(resetn),
-    
-    //DP-RAM0
-    .dp0_adr_a ( address_a[0] ),
-	.dp0_adr_b ( address_b[0] ),
-    .dp0_write_data_a ( write_data_a[0] ),
-	.dp0_write_data_b ( write_data_b[0] ),
-	.dp0_enable_a ( write_enable_a[0] ),
-	.dp0_enable_b ( write_enable_b[0] ),
-	.dp0_read_data_a ( read_data_a[0] ),
-	.dp0_read_data_b ( read_data_b[0] ),
-    
-    //DP-RAM1
-    .dp1_adr_a ( address_a[1] ),
-	.dp1_adr_b ( address_b[1] ),
-    .dp1_write_data_a ( write_data_a[1] ),
-	.dp1_write_data_b ( write_data_b[1] ),
-	.dp1_enable_a ( write_enable_a[1] ),
-	.dp1_enable_b ( write_enable_b[1] ),
-	.dp1_read_data_a ( read_data_a[1] ),
-	.dp1_read_data_b ( read_data_b[1] ),
-    
-    //DP-RAM2
-    .dp2_adr_a ( address_a[2] ),
-	.dp2_adr_b ( address_b[2] ),
-    .dp2_write_data_a ( write_data_a[2] ),
-	.dp2_write_data_b ( write_data_b[2] ),
-	.dp2_enable_a ( write_enable_a[2] ),
-	.dp2_enable_b ( write_enable_b[2] ),
-	.dp2_read_data_a ( read_data_a[2] ),
-	.dp2_read_data_b ( read_data_b[2] ),
-
-    // For accessing SRAM
-	.SRAM_address(M2_SRAM_address),
-	.SRAM_write_data(M2_SRAM_write_data),
-	.SRAM_read_data(SRAM_read_data),
-	.SRAM_we_enable(M2_SRAM_we_n)
-);
-
-// Milestone 1
-Milestone1 M1_unit (
-	.CLOCK(CLOCK_50_I),
-	.m1_start(m1_start),
-	.m1_done(m1_done),
-	.Resetn(resetn),
-    .j(m1_j),
-    .row(m1_row),
-    
-    .R_even(mR_even), 
-    .R_odd(mR_odd), 
-    .G_even(mG_even), 
-    .G_odd(mG_odd), 
-    .B_even(mB_even), 
-    .B_odd(mB_odd),
-
-	// For accessing SRAM
-	.SRAM_address(M1_SRAM_address),
-	.SRAM_write_data(M1_SRAM_write_data),
-	.SRAM_read_data(SRAM_read_data),
-	.SRAM_we_enable(M1_SRAM_we_n)
-);
-
-// Instantiate RAM0
-dual_port_RAM0 dual_port_RAM_inst0 (
-	.address_a ( address_a[0] ),
-	.address_b ( address_b[0] ),
-	.clock ( CLOCK_50_I ),
-	.data_a ( write_data_a[0] ),
-	.data_b ( write_data_b[0] ),
-	.wren_a ( write_enable_a[0] ),
-	.wren_b ( write_enable_b[0] ),
-	.q_a ( read_data_a[0] ),
-	.q_b ( read_data_b[0] )
-	);
-    
-// Instantiate RAM1
-dual_port_RAM1 dual_port_RAM_inst1 (
-	.address_a ( address_a[1] ),
-	.address_b ( address_b[1] ),
-	.clock ( CLOCK_50_I ),
-	.data_a ( write_data_a[1] ),
-	.data_b ( write_data_b[1] ),
-	.wren_a ( write_enable_a[1] ),
-	.wren_b ( write_enable_b[1] ),
-	.q_a ( read_data_a[1] ),
-	.q_b ( read_data_b[1] )
-	);
-    
-// Instantiate RAM2
-dual_port_RAM2 dual_port_RAM_inst2 (
-	.address_a ( address_a[2] ),
-	.address_b ( address_b[2] ),
-	.clock ( CLOCK_50_I ),
-	.data_a ( write_data_a[2] ),
-	.data_b ( write_data_b[2] ),
-	.wren_a ( write_enable_a[2] ),
-	.wren_b ( write_enable_b[2] ),
-	.q_a ( read_data_a[2] ),
-	.q_b ( read_data_b[2] )
-	);
 
 // Push Button unit
 PB_Controller PB_unit (
@@ -287,6 +160,23 @@ SRAM_Controller SRAM_unit (
 	.SRAM_OE_N_O(SRAM_OE_N_O)
 );
 
+// M1 SRAM interface
+M1 M1_unit (
+	.Clock(CLOCK_50_I),
+	.Resetn(resetn),
+
+	.Start(M1_start),
+	.Stop(M1_stop),
+
+	// For accessing SRAM
+	.SRAM_address(M1_SRAM_address),
+	.SRAM_write_data(M1_SRAM_write_data),
+	.SRAM_we_n(M1_SRAM_we_n),
+	.SRAM_read_data(SRAM_read_data) 
+);
+
+`define SIMULATION
+
 always @(posedge CLOCK_50_I or negedge resetn) begin
 	if (~resetn) begin
 		top_state <= S_IDLE;
@@ -296,7 +186,8 @@ always @(posedge CLOCK_50_I or negedge resetn) begin
 		UART_timer <= 26'd0;
 		
 		VGA_enable <= 1'b1;
-		m1_start <= 1'b0;
+		M1_start <= 1'b0;
+
 	end else begin
 		UART_rx_initialize <= 1'b0; 
 		UART_rx_enable <= 1'b0; 
@@ -308,11 +199,6 @@ always @(posedge CLOCK_50_I or negedge resetn) begin
 
 		case (top_state)
 		S_IDLE: begin
-        
-            `ifdef SIMULATION
-                top_state <= S_ENABLE_UART_RX;
-            `endif
-            
 			VGA_enable <= 1'b1;   
 			if (~UART_RX_I | PB_pushed[0]) begin
 				// UART detected a signal, or PB0 is pressed
@@ -322,6 +208,12 @@ always @(posedge CLOCK_50_I or negedge resetn) begin
 								
 				top_state <= S_ENABLE_UART_RX;
 			end
+
+`ifdef SIMULATION
+			M1_start <= 1'b1;
+			top_state <= S_M1_TOP_STATE;
+`endif
+
 		end
 		S_ENABLE_UART_RX: begin
 			// Enable the UART receiver
@@ -329,26 +221,17 @@ always @(posedge CLOCK_50_I or negedge resetn) begin
 			top_state <= S_WAIT_UART_RX;
 		end
 		S_WAIT_UART_RX: begin
-            //UART_timer <= UART_timer + 26'd1;
-			if ((UART_timer == 26'd49999999)) begin// && (UART_SRAM_address != 18'h00000)) begin
-				//Timeout for 1 sec on UART for detecting if file transmission is finished
+			if ((UART_timer == 26'd49999999) && (UART_SRAM_address != 18'h00000)) begin
+				// Timeout for 1 sec on UART for detecting if file transmission is finished
 				UART_rx_initialize <= 1'b1;
-				
-				start_m2 <= 1'b1;
-				top_state <= S_MILESTONE_2;
+				 			
+				M1_start <= 1'b1;
+				top_state <= S_M1_TOP_STATE;
 			end
 		end
-        S_MILESTONE_2: begin
-            if(m2_done) begin
-                start_m2 <= 1'b0;
-                top_state <= S_MILESTONE_1;
-                //top_state <= S_IDLE;
-                m1_start <= 1'b1;
-            end
-        end
-		S_MILESTONE_1: begin
-			if (m1_done) begin
-                m1_start <= 1'b0;
+		S_M1_TOP_STATE: begin
+			M1_start <= 1'b0;
+			if (M1_stop == 1'b1) begin
 				VGA_enable <= 1'b1;
 				top_state <= S_IDLE;
 			end
@@ -361,18 +244,13 @@ end
 assign VGA_base_address = 18'd146944;
 
 // Give access to SRAM for UART and VGA at appropriate time
-assign SRAM_address = ((top_state == S_ENABLE_UART_RX) | (top_state == S_WAIT_UART_RX)) 
-						? UART_SRAM_address 
-						: ( (top_state == S_MILESTONE_1) ? M1_SRAM_address : ( (top_state == S_MILESTONE_2) ? M2_SRAM_address : VGA_SRAM_address ) );
+assign SRAM_address = ((top_state == S_ENABLE_UART_RX) | (top_state == S_WAIT_UART_RX))  ? UART_SRAM_address :
+                    (top_state == S_M1_TOP_STATE) ?  M1_SRAM_address : VGA_SRAM_address;		
+						
+assign SRAM_write_data =((top_state == S_ENABLE_UART_RX) | (top_state == S_WAIT_UART_RX)) ? UART_SRAM_write_data : M1_SRAM_write_data;
 
-assign SRAM_write_data = (top_state == S_MILESTONE_1) ? M1_SRAM_write_data : 
-                            ( (top_state == S_MILESTONE_2) ? M2_SRAM_write_data : UART_SRAM_write_data );
-
-//assign SRAM_read_data = M1_SRAM_read_data;
-
-assign SRAM_we_n = ((top_state == S_ENABLE_UART_RX) | (top_state == S_WAIT_UART_RX)) 
-						? UART_SRAM_we_n 
-						: ( (top_state == S_MILESTONE_1) ? M1_SRAM_we_n : ((top_state == S_MILESTONE_2) ? M2_SRAM_we_n : 1'b1 ) );
+assign SRAM_we_n = ((top_state == S_ENABLE_UART_RX) | (top_state == S_WAIT_UART_RX)) ? UART_SRAM_we_n :
+                    (top_state == S_M1_TOP_STATE) ?  M1_SRAM_we_n : 1'b1;		
 
 // 7 segment displays
 convert_hex_to_seven_segment unit7 (
@@ -425,6 +303,18 @@ assign
    SEVEN_SEGMENT_N_O[6] = value_7_segment[6],
    SEVEN_SEGMENT_N_O[7] = value_7_segment[7];
 
-assign LED_GREEN_O = {resetn, VGA_enable, ~SRAM_we_n, Frame_error, top_state};
+//assign LED_GREEN_O = {resetn, VGA_enable, ~SRAM_we_n, Frame_error, top_state};
 
+
+always_comb begin
+	if(top_state == S_IDLE)begin
+		LED_GREEN_O = 9'd1;
+	end else begin
+		if(top_state == S_M1_TOP_STATE)begin
+			LED_GREEN_O = 9'd7;
+		end else begin
+			LED_GREEN_O = 9'h1FF;
+		end
+	end
+end
 endmodule

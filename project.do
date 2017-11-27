@@ -11,6 +11,7 @@ vlib rtl_work
 vmap work rtl_work
 
 # load designs
+vlog -sv -work rtl_work tb_project.v
 
 # insert files specific to your design here
 
@@ -23,12 +24,8 @@ vlog -sv -svinputport=var -work rtl_work +define+SIMULATION UART_Receive_Control
 vlog -sv -svinputport=var -work rtl_work VGA_SRAM_interface.v
 vlog -sv -svinputport=var -work rtl_work UART_SRAM_interface.v
 vlog -sv -svinputport=var -work rtl_work Clock_100_PLL.v
-vlog -sv -svinputport=var -work rtl_work Milestone1.v
-vlog -sv -svinputport=var -work rtl_work Milestone2.v
-vlog -sv -svinputport=var -work rtl_work dual_port_RAM0.v
-vlog -sv -svinputport=var -work rtl_work dual_port_RAM1.v
-vlog -sv -svinputport=var -work rtl_work dual_port_RAM2.v
-vlog -sv -svinputport=var -work rtl_work +define+SIMULATION  project.v
+vlog -sv -svinputport=var -work rtl_work M1.v
+vlog -sv -svinputport=var -work rtl_work +define+SIMULATION project.v
 #vlog -sv -svinputport=var -work rtl_work tb_project.v
 vlog -sv -svinputport=var -work rtl_work tb_project_v2.v
 

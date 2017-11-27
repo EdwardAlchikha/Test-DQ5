@@ -1,5 +1,5 @@
 // Copyright by Adam Kinsman and Henry Ko and Nicola Nicolici
-// Developed for the Digital Systems Design course (COE3DQ5)
+// Developed for the Digital Systems Design course (COE3DQ4)
 // Department of Electrical and Computer Engineering
 // McMaster University
 // Ontario, Canada
@@ -26,22 +26,22 @@ initial block starts on line 227)
 // This is the top testbench file
 
 `define FEOF 32'hFFFFFFFF
-`define MAX_MISMATCHES 20
+`define MAX_MISMATCHES 10
 
 // file for output
-`define OUTPUT_FILE_NAME "motorcycle_tb.ppm"
+`define OUTPUT_FILE_NAME "cat_tb.ppm"
 
 // file for comparison 
-`define COMPARE_FILE_NAME "motorcycle.sram_d0"
+`define COMPARE_FILE_NAME "cat_out.ppm"
 
 //// for milestone 1
-`define INPUT_FILE_NAME "motorcycle.sram_d1"
+`define INPUT_FILE_NAME "cat.sram_d1"
 
 //// for milestone 2
 //`define INPUT_FILE_NAME "motorcycle.sram_d2"
 
 //// for milestone 3 (completed project)
-//`define INPUT_FILE_NAME "motorcycle.mic11”
+//`define INPUT_FILE_NAME "motorcycle.mic10”
 
 module tb_project;
 
@@ -250,6 +250,8 @@ initial begin
 	@ (posedge Clock_50);	
 
 	fill_SRAM;
+
+
 	$write("SRAM is now filled at %t\n\n", $realtime);
 
 	//when the uart timer "times-out" after not receiving data for a while, your state machine

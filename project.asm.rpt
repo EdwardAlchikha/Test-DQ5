@@ -1,5 +1,5 @@
 Assembler report for project
-Mon Nov 27 08:08:01 2017
+Mon Nov 27 07:57:02 2017
 Quartus II 32-bit Version 12.0 Build 263 08/02/2012 Service Pack 2 SJ Full Version
 
 
@@ -38,7 +38,7 @@ applicable agreement for further details.
 +---------------------------------------------------------------+
 ; Assembler Summary                                             ;
 +-----------------------+---------------------------------------+
-; Assembler Status      ; Successful - Mon Nov 27 08:08:01 2017 ;
+; Assembler Status      ; Successful - Mon Nov 27 07:57:02 2017 ;
 ; Revision Name         ; project                               ;
 ; Top-level Entity Name ; project                               ;
 ; Family                ; Cyclone II                            ;
@@ -95,7 +95,7 @@ applicable agreement for further details.
 +----------------+----------------------+
 ; Device         ; EP2C35F672C6         ;
 ; JTAG usercode  ; 0xFFFFFFFF           ;
-; Checksum       ; 0x005BC9CD           ;
+; Checksum       ; 0x005A95F5           ;
 +----------------+----------------------+
 
 
@@ -106,7 +106,7 @@ applicable agreement for further details.
 +--------------------+------------------+
 ; Device             ; EPCS16           ;
 ; JTAG usercode      ; 0x00000000       ;
-; Checksum           ; 0x1C2C5B66       ;
+; Checksum           ; 0x1C34240A       ;
 ; Compression Ratio  ; 2                ;
 +--------------------+------------------+
 
@@ -117,13 +117,13 @@ applicable agreement for further details.
 Info: *******************************************************************
 Info: Running Quartus II 32-bit Assembler
     Info: Version 12.0 Build 263 08/02/2012 Service Pack 2 SJ Full Version
-    Info: Processing started: Mon Nov 27 08:07:58 2017
+    Info: Processing started: Mon Nov 27 07:56:59 2017
 Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off project -c project
 Info (115031): Writing out detailed assembly data for power analysis
 Info (115030): Assembler is generating device programming files
 Info: Quartus II 32-bit Assembler was successful. 0 errors, 0 warnings
-    Info: Peak virtual memory: 355 megabytes
-    Info: Processing ended: Mon Nov 27 08:08:01 2017
+    Info: Peak virtual memory: 358 megabytes
+    Info: Processing ended: Mon Nov 27 07:57:02 2017
     Info: Elapsed time: 00:00:03
     Info: Total CPU time (on all processors): 00:00:03
 

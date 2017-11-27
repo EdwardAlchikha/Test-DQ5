@@ -1,5 +1,5 @@
 // Copyright by Adam Kinsman and Henry Ko and Nicola Nicolici
-// Developed for the Digital Systems Design course (COE3DQ5)
+// Developed for the Digital Systems Design course (COE3DQ4)
 // Department of Electrical and Computer Engineering
 // McMaster University
 // Ontario, Canada
@@ -27,24 +27,24 @@ you will get false errors, so use the original testbench instead.
 // This is the top testbench file
 
 `define FEOF 32'hFFFFFFFF
-`define MAX_MISMATCHES 480
+`define MAX_MISMATCHES 1000
 
 // file for output
 // this is only useful if decoding is done all the way through (e.g. milestone 1 is used)
-`define OUTPUT_FILE_NAME "motorcycle_tb.ppm"
+`define OUTPUT_FILE_NAME "cat_tb.ppm"
 
 // file for comparison
 // to test milestone 2 independently, use the .sram_d1 file to check the output
-`define VERIFICATION_FILE_NAME "motorcycle.sram_d1"
+`define VERIFICATION_FILE_NAME "cat.sram_d0"
 
 //// for milestone 1
-//`define INPUT_FILE_NAME "motorcycle.sram_d1"
+`define INPUT_FILE_NAME "cat.sram_d1"
 
 //// for milestone 2
-`define INPUT_FILE_NAME "motorcycle.sram_d2"
+//`define INPUT_FILE_NAME "motorcycle.sram_d2"
 
 //// for milestone 3 (completed project)
-//`define INPUT_FILE_NAME "motorcycle.mic11”
+//`define INPUT_FILE_NAME "motorcycle.mic10”
 
 module tb_project_v2;
 
@@ -189,7 +189,7 @@ begin
 	
 	//NOTE: this is for milestone 1, in different milestones we will be
 	//writing to different regions so modify as needed
-	for (i=0; i<76800; i=i+1) begin
+	for (i=146944; i<262144; i=i+1) begin
 		if (SRAM_ARRAY_write_count[i]==0) begin
 			if (error_count < `MAX_MISMATCHES) begin
 				$write("error: did not write to location %d (%x hex)\n", i, i);
@@ -260,7 +260,7 @@ initial begin
 	
 	// Apply master reset
 	master_reset;
-	Push_buttons = 4'h0;
+	Push_buttons = 4'hF;
 	
 	@ (posedge Clock_50);
 	// Clear SRAM
@@ -307,48 +307,29 @@ always @ (posedge Clock_50) begin
 	if (uut.SRAM_we_n == 1'b0) begin	//signal names within project (instantiated as uut) should match here, assuming names from experiment4a
 	
 		//IMPORTANT: this is the "no write" memory region for milestone 1, change region for different milestones
-		if (uut.SRAM_address > 76800) begin
+		if (uut.SRAM_address < 146944) begin
 			if (warn_writing_out_of_region < `MAX_MISMATCHES) begin
-				$write("critical warning: writing outside of the YUV data region, may corrupt source data in SRAM\n");
+				$write("critical warning: writing outside of the RGB data region, may corrupt source data in SRAM\n");
 				$write("  writing value %d (%x hex) to location %d (%x hex), sim time %t\n", 
 					uut.SRAM_write_data, uut.SRAM_write_data, uut.SRAM_address, uut.SRAM_address, $realtime);
 				warn_writing_out_of_region = warn_writing_out_of_region + 1;
 			end
 		end
 	
+	
+	
+	//Address %d (%x hex), wrote value %d (%x hex), correct values is %d (%x hex)\n
+	
+	
+	
 		if (SRAM_ARRAY[uut.SRAM_address] != uut.SRAM_write_data) begin
-			$write("error: wrote value %d (%x hex) to location %d (%x hex), should be value %d (%x hex)\n",
-				uut.SRAM_write_data, uut.SRAM_write_data, uut.SRAM_address, uut.SRAM_address,
-				SRAM_ARRAY[uut.SRAM_address], SRAM_ARRAY[uut.SRAM_address]);
+			$write("Address %d (%x hex), wrote value %d (%x hex), correct values is %d (%x hex). ITERATION: %d\n",
+				uut.SRAM_address, uut.SRAM_address, uut.SRAM_write_data, uut.SRAM_write_data, 
+				SRAM_ARRAY[uut.SRAM_address], SRAM_ARRAY[uut.SRAM_address], uut.M1_unit.ITERATION);
 			$write("sim time %t\n", $realtime);
-            $write("The error number: %d\n", num_mismatches);
-            if ( (uut.SRAM_address % 3) == 1) begin
-                if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8] && SRAM_ARRAY[uut.SRAM_address][7:0] != uut.SRAM_write_data[7:0]) begin
-                    $write("Mismatch was with R and G EVEN");
-                end else if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8]) begin
-                    $write("Mismatch was with R EVEN");
-                end else begin
-                    $write("Mismatch was with G EVEN");
-                end
-            end else if ((uut.SRAM_address % 3) == 2) begin
-                if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8] && SRAM_ARRAY[uut.SRAM_address][7:0] != uut.SRAM_write_data[7:0]) begin
-                    $write("Mismatch was with B EVEN and R ODD");
-                end else if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8]) begin
-                    $write("Mismatch was with B EVEN");
-                end else begin
-                    $write("Mismatch was with R ODD");
-                end
-            end else begin
-                if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8] && SRAM_ARRAY[uut.SRAM_address][7:0] != uut.SRAM_write_data[7:0]) begin
-                    $write("Mismatch was with G ODD and B ODD");
-                end else if (SRAM_ARRAY[uut.SRAM_address][15:8] != uut.SRAM_write_data[15:8]) begin
-                    $write("Mismatch was with G ODD");
-                end else begin
-                    $write("Mismatch was with B ODD");
-                end
-            end
-		//	$write("m1 state %d\n", uut.m1.state);
-			$write("\n\n");
+	  //$write("print some useful debug info here...\n");
+		 // $write("M1 state %d\n", uut.M1.unit.state);
+		//$write("...or take a look at the last few clock cycles in the waveforms that lead up to this error\n");
 			num_mismatches = num_mismatches + 1;
 			if (num_mismatches == `MAX_MISMATCHES) $stop;
 		end

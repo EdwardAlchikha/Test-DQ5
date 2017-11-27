@@ -1,1 +1,21 @@
-Warning (10268): Verilog HDL information at tb_project.v(286): always construct contains both blocking and non-blocking assignments
+Warning (10268): Verilog HDL information at tb_project.v(288): always construct contains both blocking and non-blocking assignments
+Info (10281): Verilog HDL Declaration information at M1.v(28): object "Yp0" differs only in case from object "YP0" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(28): object "Yp1" differs only in case from object "YP1" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(28): object "Yp2" differs only in case from object "YP2" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(28): object "Yp3" differs only in case from object "YP3" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(30): object "Up8" differs only in case from object "UP8" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(30): object "Up10" differs only in case from object "UP10" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(32): object "Vp8" differs only in case from object "VP8" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(32): object "Vp10" differs only in case from object "VP10" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "R0" differs only in case from object "r0" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "G0" differs only in case from object "g0" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "B0" differs only in case from object "b0" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "R1" differs only in case from object "r1" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "G1" differs only in case from object "g1" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "B1" differs only in case from object "b1" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "R2" differs only in case from object "r2" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "G2" differs only in case from object "g2" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "B2" differs only in case from object "b2" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "R3" differs only in case from object "r3" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "G3" differs only in case from object "g3" in the same scope
+Info (10281): Verilog HDL Declaration information at M1.v(38): object "B3" differs only in case from object "b3" in the same scope
